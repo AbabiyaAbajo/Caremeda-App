@@ -1,0 +1,120 @@
+<div class="main-content">
+  <!-- Spotlight -->
+  <section class="slice slice-lg bg-gradient-primary" data-offset-top="#header-main">
+    <div class="container pt-5">
+      <div class="row">
+        <div class="col-lg-8" *ngIf="workOffer$ | async as workOffer">
+          <h2 class="display-4 text-white">{{ workOffer.title }}</h2>
+          <h3 class="display-5 text-white">{{ workOffer.careType }}</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngIf="{workOffer: workOffer$ | async, userOffering: userOffering$ | async} as data">
+    <section *ngIf="data.workOffer && data.userOffering; else loading" class="slice slice-lg">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <div class="d-flex align-items-center">
+                  <a routerLink="/profile/{{data.userOffering.id}}">
+                    <img alt="" [src]="data.userOffering.profilePicture" class="avatar rounded-circle avatar-lg hover-shadow-lg hover-scale-110">
+                  </a>
+
+                  <div class="avatar-content ml-3">
+                    <h6 class="mb-0">{{ data.userOffering.firstName }}</h6>
+                    <span class="badge badge-pill badge-soft-dark mt-2 d-block">Member since {{ data.userOffering.registerDate | date:'longDate' }}</span>
+                  </div>
+
+                  <button *ngIf="(user$ | async).id !== data.userOffering.id && (user$ | async).isCaregiver && !(didApply$ | async)" type="button" class="btn btn-primary ml-auto" [disabled]="(working$ | async)" (click)="apply()">
+                    {{ !(working$ | async) ? 'Apply' : 'One moment...' }}
+                  </button>
+
+                  <div *ngIf="(didApply$ | async)" class="alert alert-success mb-0 ml-auto" role="alert">
+                    Applied!
+                  </div>
+
+                  <a *ngIf="!(user$ | async).isCaregiver" routerLink="/account/upgrade" class="btn btn-primary ml-auto">
+                    Become a service provider to apply
+                  </a>
+                </div>
+              </div>
+              <div class="card-body">
+                <p>{{ data.workOffer.description }}</p>
+
+                <h6 class="h6 mt-4">Ward details</h6>
+                <p>{{ data.workOffer.wardDetails }}</p>
+
+                <h6 class="h6 mt-4">Responsibilities</h6>
+                <p>{{ data.workOffer.responsibilities }}</p>
+
+                <h6 class="h6 mt-4">Rules</h6>
+                <p>{{ data.workOffer.rules }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card overflow-hidden" data-animate-hover="2">
+              <div class="overflow-hidden">
+                <agm-map [latitude]="data.workOffer.lat" [longitude]="data.workOffer.lng" [scrollwheel]="false" [disableDoubleClickZoom]="true"
+                  [disableDefaultUI]="true" [clickableIcons]="false" [mapDraggable]="false" [streetViewControl]="false"
+                  [zoomControl]="false" [styles]="mapStyles" [zoom]="11" style="height: 300px;">
+                  <agm-circle [latitude]="data.workOffer.lat" [longitude]="data.workOffer.lng" [radius]="3000" [clickable]="false"
+                    fillColor="#ec6d5f"></agm-circle>
+                </agm-map>
+              </div>
+              <div class="card-body">
+                <div class="row align-items-center mb-4">
+                  <div class="col">
+                    <span class="badge badge-pill badge-soft-dark">{{ data.workOffer.wage | currency }}&nbsp;/&nbsp;hour</span>
+                  </div>
+                  <div class="col text-right">
+                    <span class="badge badge-pill badge-soft-success">{{ data.workOffer.total | currency }}</span>
+                  </div>
+                </div>
+
+                <div class="row align-items-center">
+                  <div class="col-md-5">
+                    <p class="text-center text-sm m-0">{{ data.workOffer.startTimeLocal | date:'longDate' }}
+                      <br>{{ data.workOffer.startTimeLocal | date:'shortTime' }}</p>
+                  </div>
+
+                  <div class="col-md-2 hidden-sm">
+                    to
+                  </div>
+
+                  <div class="col-md-5">
+                    <p class="text-center text-sm m-0">{{ data.workOffer.endTimeLocal | date:'longDate' }}
+                      <br>{{ data.workOffer.endTimeLocal | date:'shortTime' }}</p>
+                  </div>
+                </div>
+
+                <div *ngIf="data.workOffer.isContinuous" class="alert alert-warning mt-4" role="alert">
+                  <strong>Heads up!</strong> This is a single, contiuous shift, which may include multiple overnight stays.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-template #loading>
+    <section class="slice slice-lg">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-inline-flex align-items-center">
+              <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+              <strong>Loading...</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-template>
+</div>

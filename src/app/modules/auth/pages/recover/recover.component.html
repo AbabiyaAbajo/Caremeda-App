@@ -1,0 +1,106 @@
+<div class="main-content">
+  <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-cover bg-size--cover"
+    style="background-image: url('../../assets/img/backgrounds/bg-auth.jpg');">
+    <span class="mask bg-dark opacity-8"></span>
+    <div class="container py-5 px-md-0 d-flex align-items-center">
+      <div class="w-100">
+        <div class="row row-grid justify-content-center justify-content-lg-between align-items-center">
+          <div class="col-sm-8 col-lg-6 col-xl-5 order-lg-2">
+            <div class="card shadow zindex-100 mb-0">
+              <div class="card-body px-md-5 py-5">
+                <div class="mb-4">
+                  <h6 class="h3">Password reset</h6>
+                  <p *ngIf="recoverStep == 1" class="text-muted mb-0">Enter your email below to proceed.</p>
+                  <p *ngIf="recoverStep == 2" class="text-muted mb-0">We emailed you a reset code. Please enter it below.</p>
+                </div>
+
+                <span class="clearfix"></span>
+
+                <div *ngIf="(msgError$ | async) as msgError" class="alert alert-danger" role="alert">
+                  {{ msgError }}
+                </div>
+
+                <!-- Step 1 -->
+                <form *ngIf="recoverStep == 1" [formGroup]="formGroup1" (validSubmit)="onSubmit(1)">
+                  <div class="form-group">
+                    <label class="form-control-label">Email address</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="email" class="form-control" placeholder="name@example.com" formControlName="email" required>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill" [disabled]="(working$ | async)">
+                      <span class="btn-inner--text">{{ !(working$ | async) ? 'Next' : 'Sending reset code...' }}</span>
+                      <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Step 2 -->
+                <form *ngIf="recoverStep == 2" [formGroup]="formGroup2" (validSubmit)="onSubmit(2)">
+                  <div class="form-group">
+                    <label class="form-control-label">Reset code</label>
+                    <div class="input-group input-group-merge">
+                      <!-- <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div> -->
+                      <input type="text" class="form-control" formControlName="token" required>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                      <span class="btn-inner--text">Next</span>
+                      <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Step 3 -->
+                <form *ngIf="recoverStep == 3" [formGroup]="formGroup3" (validSubmit)="onSubmit(3)">
+                  <div class="form-group">
+                    <label class="form-control-label">Password</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                      </div>
+                      <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="********" formControlName="password" required>
+                      <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button" (click)="togglePasswordVisibility()">
+                          {{ showPassword ? 'Hide' : 'Show' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill" [disabled]="(working$ | async)">
+                      <span class="btn-inner--text">{{ !(working$ | async) ? 'Reset password' : 'Resetting...' }}</span>
+                      <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Step 4 -->
+                <ng-container *ngIf="recoverStep === 4">
+                  <p>Password reset! You can now <a routerLink="/login">login</a>.</p>
+                </ng-container>
+              </div>
+
+              <div class="card-footer px-md-5"><small>Not registered?</small>&nbsp;<a routerLink="/register" class="small font-weight-bold">Create account</a></div>
+            </div>
+          </div>
+          <div class="col-lg-5 order-lg-1 d-none d-lg-block text-white">
+            <blockquote>
+              <h3 class="h2 mb-4 text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nisl elit,
+                euismod vel mi eget, viverra sollicitudin dolor.</h3>
+              <footer>— <cite class="text-lg text-white">Nulla facilisi</cite></footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

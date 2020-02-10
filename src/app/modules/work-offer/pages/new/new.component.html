@@ -1,0 +1,167 @@
+<div class="main-content">
+  <!-- Spotlight -->
+  <section class="slice slice-lg bg-gradient-primary" data-offset-top="#header-main">
+    <div class="container pt-5">
+      <div class="row">
+        <div class="col-lg-8">
+          <h2 class="display-4 text-white">New Work Offer</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slice slice-lg">
+    <div class="container">
+      <div class="row">
+        <ng-container *ngIf="hasCreditCard === null">
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="d-inline-flex align-items-center h-100">
+              <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+              <strong>Loading...</strong>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="hasCreditCard === false">
+          <div class="col-12">
+            <div class="alert alert-group alert-warning" role="alert">
+              <div class="alert-content">
+                  You must have a credit card in your account to create a work offer.
+              </div>
+              <div class="alert-action">
+                <button type="button" class="btn btn-warning" aria-label="Add Credit Card">Add Credit Card</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="hasCreditCard === true">
+          <div class="col-md-8">
+            <form role="form" [formGroup]="formGroup" (validSubmit)="onSubmit()">
+              <div class="form-group">
+                <label class="form-control-label">Title</label>
+                <div class="input-group">
+                  <input class="form-control" type="text" formControlName="title" maxlength="100" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Description</label>
+                <textarea class="form-control" rows="7" formControlName="description" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Service type</label>
+                <div class="input-group">
+                  <select class="custom-select" formControlName="careType">
+                    <option *ngIf="!(careTypes$ | async)" disabled selected>Loading...</option>
+                    <ng-container *ngFor="let item of careTypes$ | async">
+                      <option *ngIf="item.isVisible" [value]="item.name">{{ item.name }}</option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Responsibilities</label>
+                <textarea class="form-control" rows="7" formControlName="responsibilities" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Ward details</label>
+                <input class="form-control" type="text" formControlName="wardDetails" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Rules</label>
+                <textarea class="form-control" rows="7" formControlName="rules" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Initial meeting address</label>
+                <div class="input-group input-group-merge">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-map-marker"></i></span>
+                  </div>
+                  <input type="text" class="form-control" ngx-google-places-autocomplete [options]="googlePlacesOptions"
+                    #placesRef="ngx-places" (onAddressChange)="handleMeetingLocationChange($event)"
+                    formControlName="meetingLocation" placeholder="" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-control-label">Work location</label>
+                <div class="input-group input-group-merge">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-map-marker"></i></span>
+                  </div>
+                  <input type="text" class="form-control" ngx-google-places-autocomplete [options]="googlePlacesOptions"
+                    #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" formControlName="address"
+                    placeholder="" required>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label">Start time</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                      </div>
+                      <input type="text" mwlFlatpickr class="form-control" [enableTime]="true" dateFormat="Y-m-d H:i"
+                        formControlName="startTimeLocal" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label">End time</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                      </div>
+                      <input type="text" mwlFlatpickr class="form-control" [enableTime]="true" dateFormat="Y-m-d H:i"
+                        formControlName="endTimeLocal" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label">Hourly rate</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                      </div>
+                      <input class="form-control" type="text" mask="comma_separator.2" placeholder="xx.xx"
+                        formControlName="wage" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label">Continuous?</label>
+                    <select class="custom-select" formControlName="isContinuous">
+                      <option value="1">Yes</option>
+                      <option value="0">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <button class="btn btn-sm btn-primary" type="submit"
+                  [disabled]="(working$ | async)">{{ !(working$ | async) ? 'Save' : 'One moment...' }}</button>
+              </div>
+            </form>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</div>

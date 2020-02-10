@@ -1,0 +1,50 @@
+<div class="actions-toolbar mb-4">
+  <h2 class="mb-1">
+    <span *ngIf="!toId">Inbox</span>
+    <span *ngIf="toId">Send Message</span>
+  </h2>
+</div>
+
+<ng-container *ngIf="!toId">
+  <div class="list-group">
+    <div *ngIf="!(threads$ | async)" class="list-group-item">
+      <div class="d-inline-flex align-items-center">
+        <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+        <strong>Loading...</strong>
+      </div>
+    </div>
+    <div *ngIf="(threads$ | async) && (threads$ | async).length === 0" class="list-group-item">
+      No messages in your inbox.
+    </div>
+    <div *ngFor="let offer of threads$ | async" class="list-group-item">
+      <div class="media align-items-center">
+        <div class="media-body">
+          <h6 class="text-sm d-block text-limit mb-0">{{ offer.title }}</h6>
+          <span class="d-block text-sm text-muted">{{ offer.startTimeLocal | date:'longDate' }} at
+            {{ offer.startTimeLocal | date:'shortTime' }}</span>
+          <!-- <span class="badge badge-dark badge-pill mt-2">{{ offer.wage | currency}} / hour</span> -->
+        </div>
+
+        <div class="media-body text-right">
+          <span class="text-sm text-dark font-weight-bold ml-3">{{ offer.wage | currency}} / hour</span>
+        </div>
+
+        <div class="media-body text-right">
+          <a routerLink="/work-offer/{{offer.id}}">
+            View
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="toId">
+  <ng-container *ngIf="user$ | async as user">
+    <p>To: <span class="ml-2"><img [src]="user.profilePicture" class="avatar rounded-circle avatar-sm mr-1" alt=""> {{ user.firstName }}</span></p>
+    <textarea class="form-control" placeholder="Your message..." rows="4" resize="none"></textarea>
+    <button type="button" class="btn btn-primary mt-3">
+      Send
+    </button>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,108 @@
+<div *ngIf="messageSuccess !== ''" class="alert alert-success" role="alert">
+  {{ messageSuccess }}
+</div>
+
+<div class="actions-toolbar mb-4">
+  <h2 class="mb-1">Work Offers</h2>
+</div>
+
+<nav class="nav nav-pills nav-justified mb-4">
+  <button class="nav-item nav-link border-0" [ngClass]="{'active': activeTab === 1 }" (click)="setTab(1)">Awaiting
+    Service Provider</button>
+  <button class="nav-item nav-link border-0" [ngClass]="{'active': activeTab === 2 }" (click)="setTab(2)">Awaiting
+    Approval</button>
+</nav>
+
+<div class="form-group mb-4">
+  <div class="input-group input-group-merge">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Sort by</span>
+    </div>
+    <select class="custom-select" (change)="onSortChange($event.target.value)">
+      <option value="date-added-oldest">Date added (oldest on top)</option>
+      <option value="date-added-newest">Date added (newest on top)</option>
+      <option value="date-start-latest">Start date (latest on top)</option>
+      <option value="date-start-soonest">Start date (soonest on top)</option>
+    </select>
+  </div>
+</div>
+
+<div class="list-group">
+  <!-- As Client -->
+  <h5 class='mb-2'>As Client</h5>
+
+  <div *ngIf="!(workOffersClient$ | async)" class="list-group-item">
+    <div class="d-inline-flex align-items-center">
+      <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+      <strong>Loading...</strong>
+    </div>
+  </div>
+
+  <div *ngIf="(workOffersClient$ | async) && (workOffersClient$ | async).length === 0" class="list-group-item">
+    No work offers here.
+  </div>
+
+  <div *ngFor="let offer of workOffersClient$ | async" class="list-group-item">
+    <div class="media align-items-center">
+      <div class="media-body">
+        <h6 class="text-sm d-block text-limit mb-1"><img alt="" [src]="offer.profilePicture"
+          class="avatar rounded-circle avatar-sm mr-1"> {{ offer.title }}</h6>
+        <span class="d-block text-sm text-muted">{{ offer.startTimeLocal | date:'longDate' }} at
+          {{ offer.startTimeLocal | date:'shortTime' }}</span>
+        <span class="d-block text-sm text-muted">{{ offer.wage | currency}} / hour</span>
+        <div *ngIf="offer.idServiceProviderUser" class="text-m mt-2">
+          <a class="mr-3" target="_blank" routerLink="/profile/{{offer.idServiceProviderUser}}"><i class="fas fa-user"></i></a>
+          <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+
+      <div class="media-body text-right">
+        <a routerLink="/work-offer/{{offer.id}}" class="btn btn-outline-primary btn-sm">
+          View
+        </a>
+
+        <button *ngIf="offer.idWorkMessage" class="btn btn-primary btn-sm" (click)="acceptWorkMessage(offer.idWorkMessage, offer.serviceProviderName, offer.title)" [disabled]="(working$ | async)">
+          {{ !(working$ | async) ? 'Accept' : 'One moment...' }}
+        </button>
+
+        <button *ngIf="offer.idWorkMessage" routerLink="/work-offer/{{offer.id}}" class="btn btn-dark btn-sm">
+          Decline
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- As Service Provider -->
+  <ng-container *ngIf="(showAsServiceProvider$ | async) && isServiceProvider">
+    <h5 class='mb-2 mt-4'>As Service Provider</h5>
+
+    <div *ngIf="!(workOffersServiceProvider$ | async)" class="list-group-item">
+      <div class="d-inline-flex align-items-center">
+        <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+        <strong>Loading...</strong>
+      </div>
+    </div>
+
+    <div *ngIf="(workOffersServiceProvider$ | async) && (workOffersServiceProvider$ | async).length === 0" class="list-group-item">
+      No work offers here.
+    </div>
+
+    <div *ngFor="let offer of workOffersServiceProvider$ | async" class="list-group-item">
+      <div class="media align-items-center">
+        <div class="media-body">
+          <h6 class="text-sm d-block text-limit mb-1"><img alt="" [src]="offer.profilePicture"
+              class="avatar rounded-circle avatar-sm mr-1"> {{ offer.title }}</h6>
+          <span class="d-block text-sm text-muted">{{ offer.startTimeLocal | date:'longDate' }} at
+            {{ offer.startTimeLocal | date:'shortTime' }}</span>
+          <span class="d-block text-sm text-muted">{{ offer.wage | currency}} / hour</span>
+        </div>
+
+        <div class="media-body text-right">
+          <a routerLink="/work-offer/{{offer.id}}">
+            View
+          </a>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

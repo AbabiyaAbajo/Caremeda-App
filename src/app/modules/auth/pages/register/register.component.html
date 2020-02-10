@@ -1,0 +1,140 @@
+<div class="main-content">
+  <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-cover bg-size--cover" style="background-image: url('../../assets/img/backgrounds/bg-auth.jpg');">
+    <span class="mask bg-dark opacity-8"></span>
+    <div class="container py-5 px-md-0 d-flex align-items-center">
+      <div class="w-100">
+        <div class="row row-grid justify-content-center justify-content-lg-between align-items-center">
+          <div class="col-sm-8 col-lg-6 col-xl-5 order-lg-2">
+            <div class="card shadow zindex-100 mb-0">
+              <div class="card-body px-md-5 py-5">
+                <div class="mb-4">
+                  <h6 class="h3">Create account</h6>
+                  <p *ngIf="registrationStep !== 3" class="text-muted mb-0">Get started with Caremada.</p>
+                </div>
+
+                <div *ngIf="(msgError$ | async) as msgError" class="alert alert-danger" role="alert">
+                  {{ msgError }}
+                </div>
+                
+                <span class="clearfix"></span>
+
+                <!-- Step 1 -->
+                <form *ngIf="registrationStep == 1" role="form" [formGroup]="formGroup1" (validSubmit)="onSubmit(1)">
+                  <div class="form-group">
+                    <label class="form-control-label">Email address</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="email" class="form-control" placeholder="name@example.com" formControlName="email" required>
+                    </div>
+                  </div>
+                  <div class="form-group mb-4">
+                    <label class="form-control-label">Password</label>
+                    <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                      </div>
+                      <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="********" formControlName="password" required>
+                      <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button" (click)="togglePasswordVisibility()">
+                          <i class="fas fa-eye"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                      <span class="btn-inner--text">Next</span>
+                      <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Step 2 -->
+                <form *ngIf="registrationStep == 2" role="form" [formGroup]="formGroup2" (validSubmit)="onSubmit(2)">
+                  <div class="form-group">
+                    <label class="form-control-label">First name</label>
+                    <div class="input-group input-group-merge">
+                      <input id="firstName" type="text" class="form-control" formControlName="firstName" required>
+                    </div>
+                  </div>
+                  <div class="form-group mb-4">
+                    <label class="form-control-label">Last name</label>
+                    <div class="input-group input-group-merge">
+                      <input type="text" class="form-control" formControlName="lastName" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Date of birth</label>
+                    <div class="input-group input-group-merge">
+                      <input type="text" mwlFlatpickr class="form-control" data-toggle="date" placeholder="Select date" formControlName="birthDate" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Phone number</label>
+                    <div class="input-group input-group-merge">
+                      <input type="text" class="form-control" mask="(000) 000-0000" placeholder="(xxx) xxx-xxxx" formControlName="phoneNumber" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Address</label>
+                    <div class="input-group input-group-merge">
+                      <input type="text" class="form-control" ngx-google-places-autocomplete [options]="googlePlacesOptions" #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" formControlName="address" placeholder="Enter your address" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label">Address line 2 (apartment or unit number)</label>
+                    <div class="input-group input-group-merge">
+                      <input type="text" class="form-control" placeholder="Optional" formControlName="addressLine2">
+                    </div>
+                  </div>
+                  <div class="my-4">
+                    <div class="custom-control custom-checkbox mb-3">
+                      <input id="check-terms" type="checkbox" class="custom-control-input" formControlName="terms" required>
+                      <label class="custom-control-label" for="check-terms">I agree to the <a href="#">terms and conditions</a></label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                      <input id="check-privacy" type="checkbox" class="custom-control-input" formControlName="privacy" required>
+                      <label class="custom-control-label" for="check-privacy">I agree to the <a href="#">privacy policy</a></label>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <button type="button" class="btn btn-sm btn-secondary btn-icon rounded-pill" (click)="onBack()">
+                      <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-left"></i></span>
+                      <span class="btn-inner--text">Back</span>
+                    </button>
+
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill" [disabled]="(working$ | async)">
+                      <span *ngIf="(working$ | async)" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span class="btn-inner--text">{{ !(working$ | async) ? 'Create my account' : 'One moment...' }}</span>
+                      <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Step 3 -->
+                <ng-container *ngIf="registrationStep === 3">
+                  <p>Welcome to Caremada!</p>
+                  <p>Before you can sign in, you’ll need to activate your account.</p>
+                  <p>We’ve sent you an email with an activation link.</p>
+                </ng-container>
+              </div>
+
+              <div class="card-footer px-md-5"><small>Already have an acocunt?</small>&nbsp;<a routerLink="/login" class="small font-weight-bold">Login</a></div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 order-lg-1 d-none d-lg-block">
+            <blockquote>
+              <h3 class="h2 mb-4 text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nisl elit, euismod vel mi eget, viverra sollicitudin dolor.</h3>
+              <footer>— <cite class="text-lg text-white">Nulla facilisi</cite></footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

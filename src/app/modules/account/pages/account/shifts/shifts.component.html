@@ -1,0 +1,77 @@
+<div *ngIf="messageSuccess !== ''" class="alert alert-success" role="alert">
+  {{ messageSuccess }}
+</div>
+
+<div class="actions-toolbar mb-4">
+  <h2 class="mb-1">Shifts</h2>
+</div>
+
+<nav class="nav nav-pills nav-justified mb-4">
+  <button class="nav-item nav-link border-0" [ngClass]="{'active': activeTab === 1 }" (click)="setTab(1)">Upcoming</button>
+  <button class="nav-item nav-link border-0" [ngClass]="{'active': activeTab === 2 }" (click)="setTab(2)">Awaiting Confirmation</button>
+  <button class="nav-item nav-link border-0" [ngClass]="{'active': activeTab === 3 }" (click)="setTab(3)">Complete</button>
+</nav>
+
+<!-- <div class="form-group mb-4">
+  <div class="input-group input-group-merge">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Sort by</span>
+    </div>
+    <select class="custom-select" (change)="onSortChange($event.target.value)">
+      <option value="date-added-oldest">Date added (oldest on top)</option>
+      <option value="date-added-newest">Date added (newest on top)</option>
+      <option value="date-start-latest">Start date (latest on top)</option>
+      <option value="date-start-soonest">Start date (soonest on top)</option>
+    </select>
+  </div>
+</div> -->
+
+<div class="list-group">
+  <div *ngIf="!(shifts$ | async)" class="list-group-item">
+    <div class="d-inline-flex align-items-center">
+      <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+      <strong>Loading...</strong>
+    </div>
+  </div>
+
+  <div *ngIf="(shifts$ | async) && (shifts$ | async).length === 0" class="list-group-item">
+    No work offers here.
+  </div>
+
+  <div *ngFor="let shift of shifts$ | async; let i = index" class="list-group-item">
+    <div class="media align-items-center">
+      <div class="media-body">
+        <h6 class="text-sm d-block text-limit mb-1">
+          <span class="badge badge-dark badge-pill mr-2">
+            Shift {{ shift.num }}
+          </span>
+
+          {{ shift.title }}
+        </h6>
+        <span class="d-block text-sm text-muted">{{ shift.startTimeLocal | date:'longDate' }} at
+          {{ shift.startTimeLocal | date:'shortTime' }}</span>
+      </div>
+
+      <div class="media-body text-right">
+        <ng-container *ngIf="shift.isServiceProvider">
+          <ng-container *ngIf="!shift.isComplete">
+            <button *ngIf="!shift.isClockedIn" class="btn btn-outline-success btn-sm" (click)="clockIn(shift.id, i)"
+              [disabled]="(working$ | async)">
+              {{ !(working$ | async) ? 'Clock In' : 'Clocking in...' }}
+            </button>
+          
+            <button *ngIf="shift.isClockedIn" class="btn btn-outline-dark btn-sm" (click)="clockOut(shift.id, i)"
+              [disabled]="(working$ | async)">
+              {{ !(working$ | async) ? 'Clock Out' : 'Clocking out...' }}
+            </button>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!shift.isServiceProvider">
+          <span *ngIf="!shift.isClockedIn" class="text-muted">Awaiting clock in</span>
+          <span *ngIf="shift.isClockedIn" class="text-success">Clocked in</span>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

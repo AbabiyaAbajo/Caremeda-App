@@ -1,0 +1,7 @@
+<app-header [headerTheme]="headerTheme"></app-header>
+
+<div class="root" [@routeAnimations]="o.isActivated ? o.activatedRoute : ''" *ngIf="(isLoggedIn && (user$ | async)) || !isLoggedIn">
+  <router-outlet #o="outlet" (activate)="onActivate($event)"></router-outlet>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,11 @@
+<ngx-smart-modal class="modal" customClass="nsm-centered" identifier="{{ modalIdentifier }}">
+  <div class="modal__hero" [style.backgroundImage]="'url('+ modalHeaderBg +')'">
+    <h1 class="modal__hero__title">{{ modalTitle }}</h1>
+  </div>
+
+  <div class="modal__inner">
+    <!-- <h1 class="modal__title">{{ modalTitle }}</h1> -->
+
+    <ng-content></ng-content>
+  </div>
+</ngx-smart-modal>

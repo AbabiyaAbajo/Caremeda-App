@@ -1,0 +1,54 @@
+<div *ngIf="isUpdated" class="alert alert-success" role="alert">
+  Your password has been updated.
+</div>
+
+<div class="actions-toolbar mb-4">
+  <h2 class="mb-1">Security Settings</h2>
+</div>
+
+<form role="form" [formGroup]="formGroup" (validSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-control-label">Current password</label>
+        <div class="input-group input-group-merge">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-key"></i></span>
+          </div>
+          <input [type]="showPasswordCurrent ? 'text' : 'password'" class="form-control" placeholder="********" formControlName="currentPassword" required>
+          <div class="input-group-append">
+            <button class="btn btn-secondary btn-icon" type="button" (click)="togglePasswordCurrentVisibility()">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-control-label">New password</label>
+        <div class="input-group input-group-merge">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-key"></i></span>
+          </div>
+          <input [type]="showPasswordConfirm ? 'text' : 'password'" class="form-control" placeholder="********" formControlName="newPassword" required>
+          <div class="input-group-append">
+            <button class="btn btn-secondary" type="button" (click)="togglePasswordConfirmVisibility()">
+                <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button class="btn btn-sm btn-primary" type="submit"
+      [disabled]="(working$ | async)">{{ !(working$ | async) ? 'Update' : 'One moment...' }}</button>
+  </div>
+</form>
+
+<div *ngIf="(msgError$ | async) as msgError" class="alert alert-danger mt-4" role="alert">
+  {{ msgError }}
+</div>

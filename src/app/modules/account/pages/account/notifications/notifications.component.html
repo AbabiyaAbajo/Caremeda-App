@@ -1,0 +1,29 @@
+<div class="actions-toolbar mb-4">
+    <h2 class="mb-1">Notifications</h2>
+  </div>
+  
+  <div class="list-group">
+    <div *ngIf="!(notifications$ | async)" class="list-group-item">
+      <div class="d-inline-flex align-items-center">
+        <div class="spinner-border mr-4" role="status" aria-hidden="true" fill="{color: '#ffffff'}"></div>
+        <strong>Loading...</strong>
+      </div>
+    </div>
+    <div *ngIf="(notifications$ | async) && (notifications$ | async).length === 0" class="list-group-item">
+      No notifications.
+    </div>
+    <div *ngFor="let notification of notifications$ | async" class="list-group-item">
+      <div class="media align-items-center">
+        <div class="media-body">
+          <h6 class="text-sm d-block text-limit mb-0">{{ notification.title }}</h6>
+          <span class="d-block text-sm text-muted">{{ notification.text }}</span>
+        </div>
+  
+        <div class="media-body text-right">
+          <a [href]="notification.link">
+            View
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,65 @@
+<div class="main-content">
+  <!-- Spotlight -->
+  <section class="slice slice-lg bg-gradient-primary" data-offset-top="#header-main">
+    <div class="container pt-5">
+      <div class="row">
+        <div class="col-lg-8">
+          <h2 class="display-4 text-white">
+            Find a 
+            <ng-container *ngIf="type === 'work-offer'; then workOffer; else serviceProvider"></ng-container>
+            <ng-template #workOffer>Work Offer</ng-template>
+            <ng-template #serviceProvider>Service Provider</ng-template>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slice slice-lg">
+    <div class="container">
+      <div class="row">
+        <ng-container *ngIf="type === 'work-offer'">
+          <div *ngIf="(workOffers$ | async) && (workOffers$ | async).length === 0" class="col-12">
+            No results.
+          </div>
+
+          <div class="col-xl-3 col-lg-4 col-sm-6">
+            <a *ngFor="let workOffer of workOffers$ | async" class="card hover-shadow-lg hover-translate-y-n10" routerLink="/work-offer/{{workOffer.id}}">
+              <div class="card-body text-center">
+                <h6>{{ workOffer.title }}</h6>
+                <span class="badge badge-primary badge-pill d-inline-block mb-3">
+                  {{ workOffer.careType }}
+                </span>
+                <p class="text-sm">
+                  {{ workOffer.startTimeLocal | date:'longDate' }}
+                </p>
+                <span class="card-price">{{workOffer.wage | currency}}/hour</span>
+              </div>
+            </a>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="type === 'service-provider'">
+          <div *ngIf="(serviceProviders$ | async) && (serviceProviders$ | async).length === 0" class="col-12">
+            No results.
+          </div>
+
+          <div class="col-xl-3 col-lg-4 col-sm-6">
+            <a *ngFor="let user of serviceProviders$ | async" class="card hover-shadow-lg hover-translate-y-n10" routerLink="">
+              <div class="card-body text-center">
+                <h6>{{ user.firstName }}</h6>
+                <!-- <span class="badge badge-primary badge-pill d-inline-block mb-3">
+                  {{ workOffer.careType }}
+                </span> -->
+                <!-- <p class="text-sm">
+                  {{ workOffer.startTimeLocal | date:'longDate' }}
+                </p> -->
+                <!-- <span class="card-price">{{workOffer.wage | currency}}/hour</span> -->
+              </div>
+            </a>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</div>

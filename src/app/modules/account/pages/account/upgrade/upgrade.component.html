@@ -1,0 +1,126 @@
+<div *ngIf="isServiceProvider" class="alert alert-success" role="alert">
+  Great! You can now start applying for work.
+</div>
+
+<form *ngIf="!isServiceProvider" role="form" [formGroup]="formGroup" (validSubmit)="onSubmit()">
+  <div class="actions-toolbar mb-4">
+    <h2 class="mb-1">Become a Service Provider</h2>
+    <p class="text-sm text-muted mb-0">Please complete this form to start applying to work offers.</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-control-label">Hourly wage</label>
+        <div class="input-group input-group-merge">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+          </div>
+          <input class="form-control" type="text" mask="comma_separator.2" placeholder="xx.xx" formControlName="requestedWage" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-control-label">Maximum distance you’re willing to travel</label>
+        <div class="input-group input-group-merge">
+          <div class="input-group-prepend">
+            <span class="input-group-text">km</span>
+          </div>
+          <input type="text" mask="comma_separator.2" class="form-control" formControlName="travelRadius" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-control-label">Specialty</label>
+        <input class="form-control" type="text" formControlName="specialty" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-control-label">Official occupation</label>
+        <input class="form-control" type="text" placeholder="Nurse" formControlName="officialOccupation" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-control-label">Opt in to <a href="javascript:void(0)" (click)="openModal(modalCancellation)">cancellation policy</a>?</label>
+        <select class="custom-select" formControlName="cancellationPolicy">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions-toolbar py-2 mb-4 mt-4">
+    <h6 class="mb-1">Personal information</h6>
+    <p class="text-sm text-muted mb-0">This information <strong>WILL NOT</strong> be stored on our server. <br>It is only required to verify where your payments will be deposited.</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-control-label">Social Insurance Number (SIN)</label>
+        <div class="input-group">
+          <input class="form-control" type="text" mask="000 000 000" placeholder="000 000 000" formControlName="personalIdNumber" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions-toolbar mb-4 mt-4">
+    <h6>Bank information</h6>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-control-label">Transit number</label>
+            <div class="input-group">
+              <input class="form-control" type="text" mask="0*" formControlName="bankTransitNumber" required>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-control-label">Institution number</label>
+            <div class="input-group">
+              <input class="form-control" type="text" mask="0*" formControlName="bankInstitutionNumber" required>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-control-label">Account number</label>
+        <div class="input-group">
+          <input class="form-control" type="text" mask="0*" formControlName="bankAccountNumber" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button class="btn btn-sm btn-primary" type="submit" [disabled]="(working$ | async)">{{ !(working$ | async) ? 'Save' : 'One moment...' }}</button>
+  </div>
+</form>
+
+<div *ngIf="(msgError$ | async) as msgError" class="alert alert-danger mt-4" role="alert">
+  {{ msgError }}
+</div>
+
+<ng-template #modalCancellation let-modal>
+  <div class="modal-header align-items-center">
+    <h4 class="modal-title" id="modal-basic-title">Cancellation Policy</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true"><i class="fas fa-times"></i></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada venenatis lorem, non mattis metus dignissim a.
+    Mauris viverra nunc ut ante dignissim, quis dapibus lectus aliquam. Phasellus malesuada enim eget ipsum posuere, sit
+    amet consequat ex malesuada. Sed ut porta nisi, ac volutpat ante. Morbi mauris ex, sagittis ac odio sed, congue
+    consectetur est. Integer tincidunt augue vitae placerat maximus. Suspendisse auctor ante sed felis aliquet egestas. Ut
+    eu diam ex. Ut fringilla sem lectus, nec gravida felis sodales et. Vivamus sit amet suscipit magna.</p>
+  </div>
+</ng-template>

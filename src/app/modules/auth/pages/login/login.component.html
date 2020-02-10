@@ -1,0 +1,79 @@
+<div class="main-content">
+  <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-cover bg-size--cover" style="background-image: url('../../assets/img/backgrounds/bg-auth.jpg');">
+      <span class="mask bg-dark opacity-8"></span>
+      <div class="container py-5 px-md-0 d-flex align-items-center">
+      <div class="w-100">
+        <div class="row row-grid justify-content-center justify-content-lg-between align-items-center">
+          <div class="col-sm-8 col-lg-6 col-xl-5 order-lg-2">
+            <div class="card shadow zindex-100 mb-0">
+              <div class="card-body px-md-5 py-5">
+                <ng-container *ngIf="isVerified; else verifying">
+                  <div class="mb-4">
+                    <h6 class="h3">Login</h6>
+                    <p *ngIf="!verificationMessage" class="text-muted mb-0">Sign in to your account to continue.</p>
+                    <p *ngIf="verificationMessage" class="text-success mb-0">{{ verificationMessage }}</p>
+                  </div>
+
+                  <div *ngIf="(msgError$ | async) as msgError" class="alert alert-danger" role="alert">
+                    {{ msgError }}
+                  </div>
+
+                  <span class="clearfix"></span>
+
+                  <form role="form" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                      <label class="form-control-label">Email address</label>
+                      <div class="input-group input-group-merge">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input type="email" class="form-control" placeholder="name@example.com" name="email" [(ngModel)]="loginData.email">
+                      </div>
+                    </div>
+                    <div class="form-group mb-4">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                          <label class="form-control-label">Password</label>
+                        </div>
+                      </div>
+                      <div class="input-group input-group-merge">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="********" name="password" [(ngModel)]="loginData.password">
+                      </div>
+                      <div class="mt-2 text-right">
+                        <a routerLink="/recover" class="small text-muted text-underline--dashed border-primary">Forgot password?</a>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill" [disabled]="(working$ | async)">
+                        <span class="btn-inner--text">{{ !(working$ | async) ? 'Login' : 'One moment...' }}</span>
+                        <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                      </button>
+                    </div>
+                  </form>
+                </ng-container>
+
+                <ng-template #verifying>
+                  <div class="d-flex align-items-center">
+                    <strong>Verifying...</strong>
+                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                  </div>
+                </ng-template>
+              </div>
+
+              <div class="card-footer px-md-5"><small>Not registered?</small>&nbsp;<a routerLink="/register" class="small font-weight-bold">Create account</a></div>
+            </div>
+          </div>
+          <div class="col-lg-5 order-lg-1 d-none d-lg-block text-white">
+            <blockquote>
+              <h3 class="h2 mb-4 text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nisl elit, euismod vel mi eget, viverra sollicitudin dolor.</h3>
+              <footer>— <cite class="text-lg text-white">Nulla facilisi</cite></footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
